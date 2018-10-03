@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+    
+        var canvas;
+        var canvasContext;
+        var ballX = 50;
+        var ballY = 50;
+        var speedX = 5;
+        var speedY = 10;
+        
+        var paddle1Y = 250;
+        const PADDLE_HEIGHT = 100;
+
+        function calcMousePos (e) {
+            var rect = canvas.getBoundingClientRect();
+            var root = document.documentElement;
+            var mouseX = e.clientX - rect.left - root.scrollLeft;
+            var mouseY = e.clientY - rect.top -root.scrollTop;
+            console.log(e);
+            console.log(rect);
+            console.log(root);
+            console.log(mouseX);
+            console.log(mouseY);
+            return {
+                x: mouseX,
+                y: mouseY,
+            }
+        }
+
+        window.onload = () => {
+            //get canvas
+            canvas = document.getElementById("canvas");
+            //set 2d context
+            canvasContext = canvas.getContext("2d");
+            var FPS = 30;
+            // update
+            setInterval(() => {
+                draw();
+                move();
+            }, 1000/FPS);
+
+            canvas.addEventListener('mousemove', (e) => {
+                var mousePos = calcMousePos(e);
+                paddle1Y = mousePos.y;
+            });
+            
+               
+        }
+
+        function move() {
+            ballX += speedX;
+            ballY += speedY;
+            // collision detection, redirect ball
+            if(ballX >= canvas.width - 10 || ballX <= 0 + 10) {
+                speedX = -speedX;
+            }
+            if(ballY >= canvas.height - 10 || ballY <= 0 + 10) {
+                speedY = -speedY;
+            }
+
+        }
+
+        function draw() {            
+            // background rect
+            drawRect(0,0, canvas.width, canvas.height, 'black');
+            // ball
+            drawCircle(ballX, ballY, 10, 'white');
+            // paddle
+            drawRect(0, paddle1Y, 20, 120, 'white');
+        }
+        // rectangle template to call by draw func
+        function drawRect(x, y, w, h, color) {
+            canvasContext.fillStyle = color;
+            canvasContext.fillRect(x, y, w, h);
+        }
+        // circle template to call by draw func
+        function drawCircle(cx, cy, r, color) {
+            canvasContext.fillStyle = color;
+            canvasContext.beginPath();
+            canvasContext.arc(cx, cy, r, 0, Math.PI*2, true)
+            canvasContext.fill();
+
+        }
+
+    </script>
+</body>
+</html>
