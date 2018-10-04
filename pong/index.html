@@ -20,15 +20,17 @@
         const PADDLE_HEIGHT = 100;
 
         function calcMousePos (e) {
+            // gets canvas rectangle
             var rect = canvas.getBoundingClientRect();
+            // gets root element of document (in this case, the DOM)
             var root = document.documentElement;
+            // takes event (mousemoving), gets x and y position,
+            // subtract 
             var mouseX = e.clientX - rect.left - root.scrollLeft;
             var mouseY = e.clientY - rect.top -root.scrollTop;
             console.log(e);
             console.log(rect);
             console.log(root);
-            console.log(mouseX);
-            console.log(mouseY);
             return {
                 x: mouseX,
                 y: mouseY,
@@ -49,7 +51,7 @@
 
             canvas.addEventListener('mousemove', (e) => {
                 var mousePos = calcMousePos(e);
-                paddle1Y = mousePos.y;
+                paddle1Y = mousePos.y - (PADDLE_HEIGHT / 2);
             });
             
                
@@ -74,7 +76,7 @@
             // ball
             drawCircle(ballX, ballY, 10, 'white');
             // paddle
-            drawRect(0, paddle1Y, 20, 120, 'white');
+            drawRect(0, paddle1Y, 20, PADDLE_HEIGHT, 'white');
         }
         // rectangle template to call by draw func
         function drawRect(x, y, w, h, color) {
