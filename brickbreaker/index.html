@@ -11,11 +11,13 @@
 
     <script>
 
+        // ball starting pos + speed
         var ballX = 400,
             speedX = 5,
             ballY = 300,
             speedY = 5;
 
+        // paddle size and bricks 
         var     paddleX = 20,
                 paddleY = 20;
         const   PADDLE_WIDTH = 100,
@@ -27,13 +29,13 @@
                 BRICK_COL = 8,
                 BRICK_ROWS = 4;
                 
-
+        // make an array the length of brick columns
         var brickGrid = new Array(BRICK_COL)
 
-        
+        // mouse globals
         var mouseX = 0,
             mouseY = 0;
-
+        // canvas globals
         var canvas,
             canvasContext;
 
@@ -76,12 +78,13 @@
         function ballReset() {
             ballX = canvas.width/2;
             ballY = canvas.height/2;
-            // serve ball at speedX between -3 and 3
+            // serve ball in x direction between -3 and 3
             speedX = Math.floor((Math.random() * 6) - 3);
         
         }
 
         function moveAll() {
+            // ball speed
             ballX += speedX;
             ballY += speedY;
 
@@ -110,6 +113,7 @@
                 ballX < paddleRight) { // left of the right side
                     speedY *= -1;
 
+                    // increase speed if further from center of paddle
                     var paddleCenter = paddleX + (PADDLE_WIDTH/2);
                     var ballDistFromPaddleCenter = ballX - paddleCenter;
                     speedX = ballDistFromPaddleCenter * 0.35;
