@@ -23,14 +23,14 @@
         const   PADDLE_WIDTH = 100,
                 PADDLE_HEIGHT = 10,
                 PADDLE_GAP = 60,
-                BRICK_WIDTH = 100,
-                BRICK_HEIGHT = 50,
+                BRICK_WIDTH = 80,
+                BRICK_HEIGHT = 20,
                 BRICK_GAP = 2,
-                BRICK_COL = 8,
-                BRICK_ROWS = 4;
+                BRICK_COL = 10,
+                BRICK_ROWS = 14;
                 
         // make an array the length of brick columns
-        var brickGrid = new Array(BRICK_COL)
+        var brickGrid = new Array(BRICK_COL * BRICK_ROWS)
 
         // mouse globals
         var mouseX = 0,
@@ -130,27 +130,42 @@
             drawBricks();
             
             // display mouse cords, @ mouse cords x + y, color
-            var mouseBrickCol = mouseX / BRICK_WIDTH,
-                mouseBrickRow = mouseY / BRICK_HEIGHT;
-            colorText(`${mouseBrickCol},${mouseBrickRow}`, mouseX, mouseY, 'yellow');
+            var mouseBrickCol = Math.floor(mouseX / BRICK_WIDTH),
+                mouseBrickRow = Math.floor(mouseY / BRICK_HEIGHT),
+                // display brick index on hover
+                brickIndexUnderMouse = rowColToArrayIndex(mouseBrickCol, mouseBrickRow);
+            colorText(`${mouseBrickCol},${mouseBrickRow} : ${brickIndexUnderMouse}`, mouseX, mouseY, 'yellow');
+
+            if (brickIndexUnderMouse >= 0 &&
+                brickIndexUnderMouse < BRICK_COL * BRICK_ROWS) {
+                    brickGrid[brickIndexUnderMouse] = false;
+                }
         }
 
         function brickReset() {
-            for (let i = 0; i < BRICK_COL; i++) {
+            for (let i = 0; i < BRICK_COL * BRICK_ROWS; i++) {
                 brickGrid[i] = true;
             }
+            // test single bricks
+            brickGrid[0] = true;
+        }
+
+        function rowColToArrayIndex(col, row) {
+            return col + BRICK_COL * row
         }
 
         function drawBricks() {
-            for (let i = 0; i < BRICK_ROWS; i++) {
-                for (let j = 0; j < BRICK_COL; j++) {
-                    if (brickGrid[i]) {
-                        drawRect(BRICK_WIDTH * j, BRICK_HEIGHT * i, BRICK_WIDTH - BRICK_GAP, BRICK_HEIGHT - BRICK_GAP, 'blue');
+            for (var eachRow = 0; eachRow < BRICK_ROWS; eachRow++) {
+                for (var eachCol = 0; eachCol < BRICK_COL; eachCol++) {
+                    // index bricks
+                    var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
+                    if (brickGrid[arrayIndex]) {
+                        drawRect(BRICK_WIDTH * eachCol, BRICK_HEIGHT * eachRow, BRICK_WIDTH - BRICK_GAP, BRICK_HEIGHT - BRICK_GAP, 'blue');
                     } // end if
                 } // end j loop
             } // end i loop
         } // end func
-        
+
         // rectangle template
         function drawRect(x,y,w,h,color) {
             canvasContext.fillStyle = color;
