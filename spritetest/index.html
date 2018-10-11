@@ -13,11 +13,19 @@
         ctx,
         imgAssets;
 
-    var playerX,
-        playerY;
-    
-    var spriteSheet = new Image();
+        //player starting pos
+    var playerX = 10,
+        playerY = 10,
+        sourceX = 0,
+        sourceY = 0;
 
+    var playerSpriteArray = [
+
+    ];
+    const PLAYER_SPRITES = 12;
+    var playerSpritesCount = 0;
+
+        //sprite measurements
     const SPRITE_W = 32,
           SPRITE_H = 36,
           SHEET_W = 96,
@@ -27,15 +35,20 @@
     window.onload = () => {
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
+        //load sprite sheet
         imgAssets = imgLoader();
-
+        //update interval
         setInterval(update, 1000/50);
+        
 
     }
 
     function update() {
-        drawRect(0,0, canvas.width, canvas.height, 'blue');
-        drawPlayer(imgAssets.player, 0, 0, SPRITE_W, SPRITE_H, 0, 0, SPRITE_W, SPRITE_H);
+        // canvas
+        drawRect(0,0, canvas.width, canvas.height, 'gray');
+        // player
+        // drawPlayer(imgAssets.player, sourceX, sourceY, SPRITE_W, SPRITE_H, playerX, playerY, SPRITE_W, SPRITE_H);
+        drawSpriteSheetTest(imgAssets.player);
     }
     
     function imgLoader() {
@@ -47,8 +60,28 @@
         return imgs;
     }
 
+    function drawSpriteSheetTest(obj) { 
+
+        var sourceX = 0,
+            sourceY = 0,
+            drawX = 0,
+            drawY = 0;     
+
+        for(i = 0; i < PLAYER_SPRITES; i++) {
+            for(j = 0; j < ){}
+            sourceX += SPRITE_W,
+            sourceY += SPRITE_H,
+            drawX += SPRITE_W,
+            drawY += SPRITE_H;
+
+            drawPlayer(obj, sourceX, sourceY, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
+        }   
+    }
+
+    
+
     function drawPlayer(img, sX, sY, sW, sH, dX, dY, dW, dH) {
-        // img = image source, sX/sY/sW/sH = source measurements
+        // img = image source, sX/sY/sW/sH = source measurements on image
         //                     dX/dY/dW/dH = where to draw on canvas
         ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
     }
