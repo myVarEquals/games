@@ -15,9 +15,8 @@
 
         //player starting pos
     var playerX = 10,
-        playerY = 10,
-        sourceX = 0,
-        sourceY = 0;
+        playerY = 10;
+        
 
     var playerSpriteArray = [
 
@@ -60,22 +59,40 @@
         return imgs;
     }
 
-    function drawSpriteSheetTest(obj) { 
 
-        var sourceX = 0,
-            sourceY = 0,
-            drawX = 0,
-            drawY = 0;     
+    // TODO
+    // generate array of objs with each obj holding values to pass
+    // to drawPlayer func. map the array.
+    function drawSpriteSheetTest(obj) {
 
-        for(i = 0; i < PLAYER_SPRITES; i++) {
-            for(j = 0; j < ){}
-            sourceX += SPRITE_W,
-            sourceY += SPRITE_H,
-            drawX += SPRITE_W,
+        var drawX = 0,
+            drawY = 0;
+
+        var spritesObj = {};
+    
+        for(eachRow = 0; eachRow <= SHEET_H; eachRow + SPRITE_H) {
+
+            var counter = 0;
+
+            for(eachCol = 0; eachCol <= SHEET_W; eachCol + SPRITE_W) {
+                drawPlayer(obj, eachCol, eachRow, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
+                spritesObj[counter] = drawPlayer(obj, eachCol, eachRow, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
+
+                eachCol += SPRITE_W;
+                drawX += SPRITE_W;
+
+            }
+            eachRow += SPRITE_H;
             drawY += SPRITE_H;
+            eachCol = 0;
+            drawX = 0;
+            counter++;
 
-            drawPlayer(obj, sourceX, sourceY, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
-        }   
+        }
+        console.log(spritesObj);
+        //  ctx.drawImage(spritesObj[4], 400, 400);
+           // drawPlayer(obj, sourceX, sourceY, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
+         
     }
 
     
