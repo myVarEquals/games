@@ -1,0 +1,63 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sprite Animation</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+
+    var canvas,
+        ctx,
+        imgAssets;
+
+    var playerX,
+        playerY;
+    
+    var spriteSheet = new Image();
+
+    const SPRITE_W = 32,
+          SPRITE_H = 36,
+          SHEET_W = 96,
+          SHEET_H = 144;
+
+
+    window.onload = () => {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+        imgAssets = imgLoader();
+
+        setInterval(update, 1000/50);
+
+    }
+
+    function update() {
+        drawRect(0,0, canvas.width, canvas.height, 'blue');
+        drawPlayer(imgAssets.player, 0, 0, SPRITE_W, SPRITE_H, 0, 0, SPRITE_W, SPRITE_H);
+    }
+    
+    function imgLoader() {
+        var imgs = {};
+
+        imgs.player = new Image();
+        imgs.player.src = 'ranger_m.png';
+
+        return imgs;
+    }
+
+    function drawPlayer(img, sX, sY, sW, sH, dX, dY, dW, dH) {
+        // img = image source, sX/sY/sW/sH = source measurements
+        //                     dX/dY/dW/dH = where to draw on canvas
+        ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+    }
+
+    function drawRect(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x,y,w,h);
+    }
+
+    </script>
+</body>
+</html>
