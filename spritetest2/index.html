@@ -14,6 +14,9 @@
   </head>
   <body onload="setup();">
     <canvas id="canvas"></canvas>
+    <div style="display:none">
+        <img id="heroSpriteSheet" src="ranger_m.png">
+    </div>
     <script type="text/javascript">
       /* GLOBAL */
       window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -21,14 +24,16 @@
           global_height = window.innerHeight,
           ratio = 1,
           canvas = document.getElementById('canvas'),
-          ctx = canvas.getContext('2d');
+          ctx = canvas.getContext('2d'),
+          heroSpriteSheet = document.getElementById("heroSpriteSheet");
+
       /* SETUP */
       function setup(){
-        if (ctx){
-          init();
-          requestAnimationFrame(update);
-          window.addEventListener('resize', rescale);
-          rescale();
+            if (ctx){
+                init();
+                requestAnimationFrame(update);
+                window.addEventListener('resize', rescale);
+                rescale();
         }
       }
       function rescale(){
