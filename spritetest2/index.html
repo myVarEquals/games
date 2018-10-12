@@ -19,13 +19,118 @@
     </div>
     <script type="text/javascript">
       /* GLOBAL */
+      // cross browser compatibility
       window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
       var global_width = window.innerWidth,
           global_height = window.innerHeight,
           ratio = 1,
           canvas = document.getElementById('canvas'),
           ctx = canvas.getContext('2d'),
-          heroSpriteSheet = document.getElementById("heroSpriteSheet");
+          heroSpriteSheet = document.getElementById("heroSpriteSheet"),
+          hero = new HeroState();
+
+      function HeroState() {
+        var state = {
+          x: global_width / 2,
+          y: global_height / 2,
+          width: 32,
+          height: 36,
+          position: [0,0],
+          prevX: 0,
+          prevY: 0,
+        }
+
+        var iteration = 0;
+
+        function iterator () {
+          iteration++;
+          if(iteration > 2) {
+            iteration = 0;
+          }
+        }
+
+        function nextLeft() {
+          iterator();
+          state.position = [iteration * 32, 3 * state.height];
+          
+        }
+        function nextUp() {
+          iterator();
+          state.position = [iteration * 32, 0 * state.height]; 
+          console.log(state.position); 
+          console.log(iteration);
+        }
+        function nextRight() {
+          iterator();
+          state.position = [iteration * 32, 1 * state.height];          
+        }
+        function nextDown() {
+          iterator();
+          state.position = [iteration * 32, 2 * state.height];          
+        }
+
+        function move(x, y) {
+          state.prevX = state.x;
+          state.prevY = state.y
+          state.x = x;
+          state.y = y;
+        }
+
+        console.log(state);
+        return {
+          state: state,
+          nextLeft: nextLeft,
+          nextUp: nextUp,
+          nextRight: nextRight,
+          nextDown: nextDown,
+          move: move,
+          
+        }
+      }
+
+      function drawHero() {
+        var state = hero.state;
+
+        if(state.x != state.prevX || state.y != state.prevY) {
+        ctx.drawImage(heroSpriteSheet, state.position[0], state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
+        }
+
+      }
+
+      document.addEventListener('keydown', function(e) {
+        var code = e.keyCode,
+            codes = [37, 38, 39, 40],
+            state = hero.state;
+
+
+            var map = {
+              '37': function() { // left
+                hero.move(state.x - 10, state.y);
+                hero.nextLeft();
+              },
+              '38': function() { // up
+                hero.move(state.x, state.y - 10);
+                hero.nextUp();
+                console.log(state.y);
+                console.log(state.prevY);
+              },
+              '39': function() { // right
+                hero.move(state.x + 10, state.y);
+                hero.nextRight();
+              },
+              '40': function() { // down
+                hero.move(state.x, state.y + 10);
+                hero.nextDown();
+              },
+            }
+
+            // if(codes.indexOf(code) !== -1) {
+            //   event.preventDefault();
+            //   console.log(e.keyCode);
+            // }
+            map[ code ]();
+
+      });
 
       /* SETUP */
       function setup(){
@@ -50,16 +155,18 @@
       }
       /* DRAW */
       function draw(){
+        ctx.clearRect(0,0,global_width, global_height);
         ctx.save();
         ctx.scale(ratio, ratio);
-        // Execute your draw specific functions between the lines to enable high-dpi drawing
-        // ---------------------------------------------------------------------------------
         
-        // ---------------------------------------------------------------------------------
+        drawHero();
+
         ctx.restore();
       }
       /* UPDATE */
       function update(){ 
+
+        draw();
         requestAnimationFrame(update);
       }
     </script>
