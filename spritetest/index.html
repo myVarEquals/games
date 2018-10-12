@@ -11,33 +11,55 @@
 
     var canvas,
         ctx,
-        imgAssets;
+        imgAssets,
+        player;
 
-        //player starting pos
-    var playerX = 10,
-        playerY = 10;
-        
+        // player class
+    var Player = {
+        sourceX : 0,
+        sourceY : 0,
+        sourceW : 32,
+        sourceH : 36,
+        destX : 0,
+        destY : 0,
+        destW : 32,
+        destH : 36,
+        frames : 12,
+        cols : 3,
+        currentFrame : 0,
+        speedX : 0,
+        speedY : 0,
+        updateFrames : function() {
+            this.sourceX = Math.floor((this.currentFrame % this.cols) * this.destW);
+            this.sourceY = Math.floor((this.currentFrame / this.cols) * this.destH);
+            this.currentFrame = (this.currentFrame + 1) % this.frames;
 
-    var playerSpriteArray = [
+        },
+        move : function() {
 
-    ];
-    const PLAYER_SPRITES = 12;
-    var playerSpritesCount = 0;
+        },
+        display : function() {
+            ctx.drawImage(
+                imgAssets.player, this.sourceX, this.sourceY, this.sourceW, this.sourceH,
+                this.destX, this.destY, this.destW, this.destH
+            );
+            
+        }
+    }
 
-        //sprite measurements
-    const SPRITE_W = 32,
-          SPRITE_H = 36,
-          SHEET_W = 96,
-          SHEET_H = 144;
+
+    
 
 
     window.onload = () => {
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
         //load sprite sheet
-        imgAssets = imgLoader();
-        //update interval
-        setInterval(update, 1000/50);
+        imgAssets = loadSpriteMaps();
+
+        player = Object.create(Player);
+        setInterval(update, 1000);
+        
         
 
     }
@@ -46,11 +68,11 @@
         // canvas
         drawRect(0,0, canvas.width, canvas.height, 'gray');
         // player
-        // drawPlayer(imgAssets.player, sourceX, sourceY, SPRITE_W, SPRITE_H, playerX, playerY, SPRITE_W, SPRITE_H);
-        drawSpriteSheetTest(imgAssets.player);
+        player.display();
+        player.updateFrames();
     }
     
-    function imgLoader() {
+    function loadSpriteMaps() {
         var imgs = {};
 
         imgs.player = new Image();
@@ -59,49 +81,16 @@
         return imgs;
     }
 
-
-    // TODO
-    // generate array of objs with each obj holding values to pass
-    // to drawPlayer func. map the array.
-    function drawSpriteSheetTest(obj) {
-
-        var drawX = 0,
-            drawY = 0;
-
-        var spritesObj = {};
-    
-        for(eachRow = 0; eachRow <= SHEET_H; eachRow + SPRITE_H) {
-
-            var counter = 0;
-
-            for(eachCol = 0; eachCol <= SHEET_W; eachCol + SPRITE_W) {
-                drawPlayer(obj, eachCol, eachRow, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
-                spritesObj[counter] = drawPlayer(obj, eachCol, eachRow, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
-
-                eachCol += SPRITE_W;
-                drawX += SPRITE_W;
-
-            }
-            eachRow += SPRITE_H;
-            drawY += SPRITE_H;
-            eachCol = 0;
-            drawX = 0;
-            counter++;
-
-        }
-        console.log(spritesObj);
-        //  ctx.drawImage(spritesObj[4], 400, 400);
-           // drawPlayer(obj, sourceX, sourceY, SPRITE_W, SPRITE_H, drawX, drawY, SPRITE_W, SPRITE_H);
-         
-    }
-
     
 
+        
+    
     function drawPlayer(img, sX, sY, sW, sH, dX, dY, dW, dH) {
-        // img = image source, sX/sY/sW/sH = source measurements on image
-        //                     dX/dY/dW/dH = where to draw on canvas
+
         ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+
     }
+    
 
     function drawRect(x, y, w, h, color) {
         ctx.fillStyle = color;
