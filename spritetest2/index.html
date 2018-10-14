@@ -70,11 +70,11 @@
         }
 
         function move(x, y) {
-          state.prevX = state.x;
-          state.prevY = state.y
           state.x = x;
           state.y = y;
         }
+
+        
 
         console.log(state);
         return {
@@ -88,13 +88,48 @@
         }
       }
 
+      function checkPrevAnimation(e) {
+          var state = e;
+          console.log(state);
+
+          prevX = state.x;
+          prevY = state.y;
+          state.x = e.x;
+          state.y = e.y;
+
+          var isIdle = false;
+        
+          if(prevX == state.x && prevY == state.y) {
+            isIdle = true;
+            return isIdle;
+          }
+          return isIdle;
+        }
+      
+
       function drawHero() {
         var state = hero.state;
+        if(checkPrevAnimation(state)) {
+          if(state.position[1] == 0) {         
+              ctx.drawImage(heroSpriteSheet, 32, state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
 
-        if(state.x != state.prevX || state.y != state.prevY) {
-        ctx.drawImage(heroSpriteSheet, state.position[0], state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
+          }
+          if(state.position[1] == 36) {           
+              ctx.drawImage(heroSpriteSheet, 32, state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
+           
+          }
+          if(state.position[1] == 72) {           
+              ctx.drawImage(heroSpriteSheet, 32, state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
+           
+          }
+          if(state.position[1] == 108) {            
+              ctx.drawImage(heroSpriteSheet, 32, state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
+           
+          }
+
+        } else {
+          ctx.drawImage(heroSpriteSheet, state.position[0], state.position[1], state.width, state.height, state.x, state.y, state.width, state.height);
         }
-
       }
 
       document.addEventListener('keydown', function(e) {
