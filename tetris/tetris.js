@@ -43,7 +43,6 @@ function drawBoard() {
 drawBoard();
 
 // gen random piece
-
 function randomPiece() {
     let r = randomN = Math.floor(Math.random() * PIECES.length);
     return new Piece(PIECES[r][0], PIECES[r][1]);
@@ -72,7 +71,7 @@ function Piece(tetromino, color) {
     this.color = color;
     // for cycling through array of positions in rotating piece
     this.tetrominoN = 0;
-    // init at first array index of this piece's rotation cycle
+    // init at first array index of this piece's rotation cycle ie Z[0]
     this.activeTetromino = this.tetromino[this.tetrominoN];
     // default pos when Piece is created
     this.x = 3;
@@ -228,9 +227,10 @@ Piece.prototype.lock = function() {
             score += 10;
         }
     }
+    // draw new board to reflect changes
     drawBoard();
-
-   scoreElement.innerHTML = score;
+    // update score on page
+    scoreElement.innerHTML = score;
 }
 
 // collision detection
