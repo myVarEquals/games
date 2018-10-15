@@ -1,22 +1,30 @@
 //define globals
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
 
 // load img assets
+var heliImg = new Image();
+var backgroundImg = new Image();
+var wallImg = new Image();
 
-// draw background
+heliImg.src = "imgAssets/helicopter.png";
+backgroundImg.src = "imgAssets/background.png";
+wallImg.src = "imgAssets/bricks.png";
+const gap = wallImg.height + 300;
 
-// draw foreground
+// draw images
 
-// draw heli
+function loop() {
 
-// draw walls
+    ctx.drawImage(backgroundImg, 0, 0);
+    ctx.drawImage(wallImg, 150, -250);
+    ctx.drawImage(wallImg, 150, 0 + gap);
 
-// move heli
+    requestAnimationFrame(loop);
 
-// move walls
-    // draw new walls as needed
+    
+}
 
-// detect collision
-    // reset on collision
-
-// track score
+loop();
 
