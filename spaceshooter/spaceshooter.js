@@ -4,10 +4,16 @@ var ctx = canvas.getContext('2d');
 
 var stars = [];
 // load img ship/bogie/laser/missile/bogieLaser
+var laserImg = new Image();
+laserImg.src = 'imgAssets/laser1.png'
+var missileImg = new Image();
+missileImg.src = 'imgAssets/missile.png'
 var heroImg = new Image();
 heroImg.src = 'imgAssets/ship.png';
 var heroW = 45;
 var heroH = 31;
+
+
 // score
 
 //draw
@@ -69,6 +75,7 @@ function moveStars() {
 function Ship() {
     this.x = (canvas.width / 2) - (heroW / 2);
     this.y = (canvas.height - 50) - (heroH / 2);
+    this.v = 250;
     this.weapon = 1;
     this.missiles = 3;    
 } 
@@ -79,24 +86,54 @@ Ship.prototype.drawShip = function() {
     ctx.drawImage(heroImg, this.x, this.y);
 }
 
-Ship.prototype.moveLeft = function() {
-    this.x -= 10;
-}
-Ship.prototype.moveUp = function() {
-    if (this.y >= 300) {        
-        this.y -= 10;
-    }
-}
-Ship.prototype.moveRight = function() {
-    this.x += 10;
-}
-Ship.prototype.moveDown = function() {
-    this.y += 10;
+var keysPressed = {};
+addEventListener('keydown', function(e) {
+    keysPressed[e.keyCode] = true;
+});
+addEventListener('keyup', function(e) {
+    delete keysPressed[e.keyCode];
+});
+
+Ship.prototype.drawLaser = function() {
+    console.log('laserss');
+    ctx.drawImage(laserImg, ship.x, ship.y);
+
+    let y = ship.y;
+
+    setInterval(function() {
+        y--;
+        ctx.drawImage(laserImg, ship.x, y)
+    }, 500);
 }
 
-Ship.prototype.shootLaser = function() {
-    
+addEventListener('keydown', function(e) {
+    if (e.keyCode == 32) {
+        ship.drawLaser();
+    }
+})
+
+
+
+
+
+Ship.prototype.controlShip = function(tick) {
+
+    if (37 in keysPressed) {
+        this.x -= this.v * tick;
+    }
+    if (38 in keysPressed) {        
+        this.y -= this.v * tick;
+    }
+    if (39 in keysPressed) {        
+        this.x += this.v * tick;
+    }
+    if (40 in keysPressed) {
+        this.y += this.v * tick;
+        
+    }
 }
+
+
 
 function draw() {
     ctx.clearRect(0,0, canvas.width, canvas.height);
@@ -107,25 +144,26 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-draw();
+ 
+var mainLoop = function() {
 
-document.addEventListener('keydown', CONTROL); 
+    
 
-function CONTROL (event) {
-    event.preventDefault();
-    if(event.keyCode == 37) {
-        ship.moveLeft();
-    }
-    if(event.keyCode == 38) {
-        ship.moveUp();
-    }
-    if(event.keyCode == 39) {
-        ship.moveRight();
-    }
-    if(event.keyCode == 40) {
-        ship.moveDown();
-    }
+    let now = Date.now();
+    let delta = now - then;
+    
+    ship.controlShip(delta / 1000);
+   
+
+    then = now;
+    requestAnimationFrame(mainLoop)
 }
+
+draw();
+then = Date.now();
+mainLoop();
+
+
 
 
     // ship
