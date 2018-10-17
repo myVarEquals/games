@@ -3,6 +3,8 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 var stars = [];
+var laserCount = 0;
+var laserArray = [];
 // load img ship/bogie/laser/missile/bogieLaser
 var laserImg = new Image();
 laserImg.src = 'imgAssets/laser1.png'
@@ -77,6 +79,8 @@ function Ship() {
     this.y = (canvas.height - 50) - (heroH / 2);
     this.v = 250;
     this.weapon = 1;
+    this.rate = 15;
+    this.count = 0;
     this.missiles = 3;    
 } 
 
@@ -86,38 +90,44 @@ Ship.prototype.drawShip = function() {
     ctx.drawImage(heroImg, this.x, this.y);
 }
 
+function Laser(x,y) {
+    this.x = x;
+    this.y = y;
+}
+
 var keysPressed = {};
 addEventListener('keydown', function(e) {
     keysPressed[e.keyCode] = true;
+
+    
 });
 addEventListener('keyup', function(e) {
     delete keysPressed[e.keyCode];
 });
 
-Ship.prototype.drawLaser = function() {
-    console.log('laserss');
-    ctx.drawImage(laserImg, ship.x, ship.y);
-
-    let y = ship.y;
-
-    setInterval(function() {
-        y--;
-        ctx.drawImage(laserImg, ship.x, y)
-    }, 500);
+function drawLasers() {
+    for (i = 0; i < laserArray.length; i++) {
+        ctx.drawImage(laserImg, laserArray[i].x, laserArray[i].y);
+    }
 }
 
-addEventListener('keydown', function(e) {
-    if (e.keyCode == 32) {
-        ship.drawLaser();
+function moveLasers() {
+    for (i = 0; i < laserArray.length; i++) {
+        laserArray[i].y -= 5;
     }
-})
-
-
-
-
+}
 
 Ship.prototype.controlShip = function(tick) {
 
+    if(32 in keysPressed) {         
+            this.count++;
+            console.log(this.count);
+        if(this.count == this.rate) {
+            laserArray.push(new Laser(ship.x,ship.y));
+            this.count = 0;
+        }      
+        
+    }    
     if (37 in keysPressed) {
         this.x -= this.v * tick;
     }
@@ -136,31 +146,32 @@ Ship.prototype.controlShip = function(tick) {
 
 
 function draw() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
-    drawSpace();
-    moveStars();  
+    drawSpace();   
     ship.drawShip();
+    drawLasers();
     // drawStar(100, 100, 3);
-    requestAnimationFrame(draw);
 }
 
+function move() {      
+    moveStars();    
+    moveLasers();
+}
  
-var mainLoop = function() {
-
-    
+var mainLoop = function() {    
 
     let now = Date.now();
     let delta = now - then;
     
     ship.controlShip(delta / 1000);
-   
-
+    
+    draw();
+    move();
     then = now;
-    requestAnimationFrame(mainLoop)
+    requestAnimationFrame(mainLoop);
 }
 
 draw();
-then = Date.now();
+var then = Date.now();
 mainLoop();
 
 
