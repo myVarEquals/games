@@ -107,13 +107,23 @@ addEventListener('keyup', function(e) {
 
 function drawLasers() {
     for (i = 0; i < laserArray.length; i++) {
+        if (laserArray[i] == undefined) {
+            continue;
+        }
         ctx.drawImage(laserImg, laserArray[i].x, laserArray[i].y);
     }
 }
 
 function moveLasers() {
+    console.log(laserArray);
     for (i = 0; i < laserArray.length; i++) {
+        if (laserArray[i] == undefined) {
+            continue;
+        }
         laserArray[i].y -= 5;
+        if (laserArray[i].y < -10) {
+            delete laserArray[i];
+        }
     }
 }
 
@@ -121,7 +131,6 @@ Ship.prototype.controlShip = function(tick) {
 
     if(32 in keysPressed) {         
             this.count++;
-            console.log(this.count);
         if(this.count == this.rate) {
             laserArray.push(new Laser(ship.x,ship.y));
             this.count = 0;
@@ -129,17 +138,24 @@ Ship.prototype.controlShip = function(tick) {
         
     }    
     if (37 in keysPressed) {
-        this.x -= this.v * tick;
+        if(this.x > 0) {
+            this.x -= this.v * tick;
+        }
     }
-    if (38 in keysPressed) {        
-        this.y -= this.v * tick;
+    if (38 in keysPressed) {
+        if (this.y > canvas.height / 2) {        
+            this.y -= this.v * tick;
+        }
     }
-    if (39 in keysPressed) {        
-        this.x += this.v * tick;
+    if (39 in keysPressed) {
+        if (this.x < canvas.width - heroW) {        
+            this.x += this.v * tick;
+        }
     }
     if (40 in keysPressed) {
-        this.y += this.v * tick;
-        
+        if (this.y < canvas.height - heroH) {
+            this.y += this.v * tick;
+        }
     }
 }
 
