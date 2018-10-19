@@ -2,8 +2,9 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+// star array to be filled
 var stars = [];
-var laserCount = 0;
+// track lasers
 var laserArray = [];
 // load img ship/bogie/laser/missile/bogieLaser
 var laserImg = new Image();
@@ -14,17 +15,20 @@ var heroImg = new Image();
 heroImg.src = 'imgAssets/ship.png';
 var heroW = 45;
 var heroH = 31;
+var bogieImg = new Image();
+bogieImg.src = 'imgAssets/bogie1.png';
+var bogieW = '103';
+var bogieH = '84';
 
 
 // score
 
-//draw
-
+// basic draw rect
 function drawRect(x,y,w,h,color) {
     ctx.fillStyle = color;
     ctx.fillRect(x,y,w,h);
 }
-
+// template
 function Star() {
     this.size = 0,
     this.x = 0;
@@ -34,15 +38,15 @@ function Star() {
     this.v = 1;
 }
 
-
+// draw space
 function drawSpace() {
     drawRect(0,0,canvas.width,canvas.height, 'black');
 }
-
+// draw star
 function drawStar(x,y,size) {
     drawRect(x,y, size, size, 'white');
 }
-
+// fill star array
 function populateStars() {
 
     for (i = 0; i < 20; i++) {
@@ -58,10 +62,10 @@ function populateStars() {
         drawStar(stars[i].x, stars[i].y, stars[i].w);
     }
 
-    console.log(stars);
 }
-
+// generate stars
 populateStars();
+
 
 function moveStars() {
     for(i = 0; i < stars.length; i++) {
@@ -73,7 +77,7 @@ function moveStars() {
         drawStar(stars[i].x, stars[i].y, stars[i].w);
     }
 }
-
+// template
 function Ship() {
     this.x = (canvas.width / 2) - (heroW / 2);
     this.y = (canvas.height - 50) - (heroH / 2);
@@ -83,8 +87,38 @@ function Ship() {
     this.count = 0;
     this.missiles = 3;    
 } 
+// init ship
+let ship = new Ship();
 
-let ship = new Ship()
+// template
+function BogieOne() {
+    this.x = (canvas.width / 2);
+    this.y = 50;
+    this.v = 250;
+    this.weapon = 1;
+}
+// track bogies on screen
+var bogiesArray = [];
+
+var level = 3;
+
+function populateBogies() {
+
+    for (i = 0; i < level; i++) {       
+        bogiesArray[i] = new BogieOne();    
+        console.log(bogiesArray[i]);
+    }
+}
+
+populateBogies();
+    
+
+function drawBogies(bogies) {    
+    for(i = 0; i < bogies.length; i++) {        
+        ctx.drawImage(bogieImg, bogies[i].x, bogies[i].y);
+    }
+}
+
 
 Ship.prototype.drawShip = function() {
     ctx.drawImage(heroImg, this.x, this.y);
@@ -115,7 +149,6 @@ function drawLasers() {
 }
 
 function moveLasers() {
-    console.log(laserArray);
     for (i = 0; i < laserArray.length; i++) {
         if (laserArray[i] == undefined) {
             continue;
@@ -166,6 +199,7 @@ function draw() {
     ship.drawShip();
     drawLasers();
     // drawStar(100, 100, 3);
+    drawBogies(bogiesArray);
 }
 
 function move() {      
