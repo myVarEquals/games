@@ -96,11 +96,12 @@ function BogieOne() {
     this.y = 50;
     this.v = 250;
     this.weapon = 1;
+    this.laserArray = [];
 }
 // track bogies on screen
 var bogiesArray = [];
 
-var level = 3;
+var level = 1;
 
 function populateBogies() {
 
@@ -115,7 +116,34 @@ populateBogies();
 
 function drawBogies(bogies) {    
     for(i = 0; i < bogies.length; i++) {        
-        ctx.drawImage(bogieImg, bogies[i].x, bogies[i].y);
+        ctx.drawImage(bogieImg, bogies[i].x, bogies[i].y, heroW, heroH);
+    }
+}
+
+function moveBogies(bogies) {
+    for(i = 0; i < bogies.length; i++) {
+        if (ship.x < bogies[i].x) {
+            bogies[i].x--;
+        }
+        if (ship.x > bogies[i].x) {
+            bogies[i].x++;
+        }
+    }
+}
+
+var bogieLaserArray = [];
+
+function drawBogiesLasers(bogies) {
+    for (i = 0; i < bogies.length; i++) {
+        bogieLaserArray.push(new Laser(bogies[i].x, bogies[i].y));         
+        ctx.drawImage(laserImg, bogieLaserArray[i].x, bogieLaserArray[i].y);
+         
+    }
+}
+
+function moveBogiesLasers(bogies) {
+    for (i = 0; i < bogies.length; i++) {        
+        bogieLaserArray[i].y += 3;               
     }
 }
 
@@ -124,6 +152,7 @@ Ship.prototype.drawShip = function() {
     ctx.drawImage(heroImg, this.x, this.y);
 }
 
+// CREATE NEW LASER
 function Laser(x,y) {
     this.x = x;
     this.y = y;
@@ -200,11 +229,14 @@ function draw() {
     drawLasers();
     // drawStar(100, 100, 3);
     drawBogies(bogiesArray);
+    drawBogiesLasers(bogiesArray);
 }
 
 function move() {      
     moveStars();    
     moveLasers();
+    moveBogies(bogiesArray);
+    moveBogiesLasers(bogieLaserArray);
 }
  
 var mainLoop = function() {    
