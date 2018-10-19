@@ -135,29 +135,39 @@ var bogieLaserArray = [];
 
 function generateBogieLasers(bogies) {
     for (i = 0; i < bogies.length; i++) {
-        console.log(bogies[i]);   
-        console.log(bogiesArray[i]);     
-        setInterval(function() {
-            console.log(bogiesArray[i]);
-            bogieLaserArray.push(new Laser(bogiesArray[i].x, bogiesArray[i].y));         
-            
-        }, 2500);
+        bogieLaserArray.push(new Laser(bogies[i].x, bogies[i].y));         
+                      
     }
+
+    setTimeout(function(){
+        generateBogieLasers(bogiesArray);
+    },2500);
+    
 }
 
 generateBogieLasers(bogiesArray);
 
 function drawBogiesLasers(bogies) {
     for (i = 0; i < bogies.length; i++) {
+        if(!bogies[i]) {
+            continue;
+        } 
         console.log(bogieLaserArray);
         ctx.drawImage(laserImg, bogies[i].x, bogies[i].y);
+
          
     }
 }
 
 function moveBogiesLasers(bogies) {
-    for (i = 0; i < bogies.length; i++) {        
-        bogiesLaserArray[i].y += 3;               
+    for (i = 0; i < bogies.length; i++) {
+        if(!bogies[i]) {
+            continue;
+        }      
+        bogieLaserArray[i].y += 3;   
+        if (bogieLaserArray[i].y > canvas.height) {
+            delete bogieLaserArray[i];
+        }            
     }
 }
 
@@ -243,7 +253,7 @@ function draw() {
     drawLasers();
     // drawStar(100, 100, 3);
     drawBogies(bogiesArray);
-    drawBogiesLasers(bogiesLaserArray);
+    drawBogiesLasers(bogieLaserArray);
 }
 
 function move() {      
