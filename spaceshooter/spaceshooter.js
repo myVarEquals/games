@@ -19,6 +19,10 @@ var bogieImg = new Image();
 bogieImg.src = 'imgAssets/bogie1.png';
 var bogieW = '103';
 var bogieH = '84';
+var bogieLaserImg = new Image();
+bogieLaserImg.src = 'imgAssets/bogielaser1.png';
+var bogieLaserW = '7';
+var bogieLaserH = '19';
 
 
 // score
@@ -107,7 +111,6 @@ function populateBogies() {
 
     for (i = 0; i < level; i++) {       
         bogiesArray[i] = new BogieOne();    
-        console.log(bogiesArray[i]);
     }
 }
 
@@ -152,8 +155,8 @@ function drawBogiesLasers(bogies) {
         if(!bogies[i]) {
             continue;
         } 
-        console.log(bogieLaserArray);
-        ctx.drawImage(laserImg, bogies[i].x, bogies[i].y);
+        // console.log(bogieLaserArray);
+        ctx.drawImage(bogieLaserImg, bogies[i].x, bogies[i].y, bogieLaserW, bogieLaserH);
 
          
     }
@@ -165,6 +168,10 @@ function moveBogiesLasers(bogies) {
             continue;
         }      
         bogieLaserArray[i].y += 3;   
+        if(testCollision(bogies[i])) {
+            // destroy
+            console.log('kill');
+        }
         if (bogieLaserArray[i].y > canvas.height) {
             delete bogieLaserArray[i];
         }            
@@ -244,6 +251,18 @@ Ship.prototype.controlShip = function(tick) {
         }
     }
 }
+
+function testCollision(laser) {
+    var collision = false;
+    if(laser.x > ship.x &&
+        laser.x < ship.x + heroW &&
+        laser.y > ship.y &&
+        laser.y < ship.y + heroH) {
+            collision = true;
+        }
+
+    return collision;
+ }
 
 
 
