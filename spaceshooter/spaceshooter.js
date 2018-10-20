@@ -89,7 +89,8 @@ function Ship() {
     this.weapon = 1;
     this.rate = 15;
     this.count = 0;
-    this.missiles = 3;    
+    this.missiles = 3;  
+    this.hitpoints = 5;  
 } 
 // init ship
 let ship = new Ship();
@@ -118,13 +119,19 @@ populateBogies();
     
 
 function drawBogies(bogies) {    
-    for(i = 0; i < bogies.length; i++) {        
+    for(i = 0; i < bogies.length; i++) {     
+        if(!bogies[i]) {
+            continue;
+        }   
         ctx.drawImage(bogieImg, bogies[i].x, bogies[i].y, heroW, heroH);
     }
 }
 
 function moveBogies(bogies) {
     for(i = 0; i < bogies.length; i++) {
+        if(!bogies[i]) {
+            continue;
+        }  
         if (ship.x < bogies[i].x) {
             bogies[i].x--;
         }
@@ -168,9 +175,18 @@ function moveBogiesLasers(bogies) {
             continue;
         }      
         bogieLaserArray[i].y += 3;   
-        if(testCollision(bogies[i])) {
-            // destroy
-            console.log('kill');
+        if(testCollision(bogies[i])) {                           
+            delete bogieLaserArray[i];
+            if (ship.hitpoints > 0) {
+                ship.hitpoints--;
+
+            }
+            if (ship.hitpoints == 0) {
+                console.log('gameover');
+                
+            }
+            console.log(ship.hitpoints);
+            continue;
         }
         if (bogieLaserArray[i].y > canvas.height) {
             delete bogieLaserArray[i];
@@ -257,7 +273,7 @@ function testCollision(laser) {
     if(laser.x > ship.x &&
         laser.x < ship.x + heroW &&
         laser.y > ship.y &&
-        laser.y < ship.y + heroH) {
+        laser.y < ship.y + heroH) {            
             collision = true;
         }
 
@@ -301,19 +317,11 @@ mainLoop();
 
 
 
+// missile
+// score
 
-    // ship
-    // bogie
-
-    // laser
-    // missile
-    // bogieLaser
-    //score
-
-// Hero controls
+// Hero 
     // hitpoints
-    // move
-    // shoot laser
     // shoot missile
     // activate item?
 
@@ -321,7 +329,5 @@ mainLoop();
     // difficulty
     // color
     // hitpoints
-    // move
-    // shoot laser
 
 
