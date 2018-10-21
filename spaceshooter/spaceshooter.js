@@ -23,7 +23,11 @@ var bogieLaserImg = new Image();
 bogieLaserImg.src = 'imgAssets/bogielaser1.png';
 var bogieLaserW = '7';
 var bogieLaserH = '19';
-
+var explosionSheet = new Image();
+explosionSheet.src = 'imgAssets/explosion.png';
+var expSheetW = 786;
+var expSheetH = 128;
+var gameOver = false;
 
 // score
 
@@ -145,8 +149,7 @@ var bogieLaserArray = [];
 
 function generateBogieLasers(bogies) {
     for (i = 0; i < bogies.length; i++) {
-        bogieLaserArray.push(new Laser(bogies[i].x, bogies[i].y));         
-                      
+        bogieLaserArray.push(new Laser(bogies[i].x, bogies[i].y));                     
     }
 
     setTimeout(function(){
@@ -182,8 +185,7 @@ function moveBogiesLasers(bogies) {
 
             }
             if (ship.hitpoints == 0) {
-                console.log('gameover');
-                
+                gameOver = true;               
             }
             console.log(ship.hitpoints);
             continue;
@@ -236,6 +238,16 @@ function moveLasers() {
     }
 }
 
+function drawExplosion() {
+    let now = Date.now();
+    let delta = now - then;
+
+    for(i = 0; i < expSheetW; i++) {
+        ctx.drawImage(explosionSheet, i * (expSheetW / 7), expSheetH, expSheetW/7, expSheetH, ship.x, ship.y, expSheetW/7, expSheetH);
+    }
+
+}
+
 Ship.prototype.controlShip = function(tick) {
 
     if(32 in keysPressed) {         
@@ -283,12 +295,16 @@ function testCollision(laser) {
 
 
 function draw() {
-    drawSpace();   
+    drawSpace();
+    if(gameOver) {
+        drawExplosion();
+    } else {    
     ship.drawShip();
     drawLasers();
     // drawStar(100, 100, 3);
     drawBogies(bogiesArray);
     drawBogiesLasers(bogieLaserArray);
+    }
 }
 
 function move() {      
@@ -298,15 +314,13 @@ function move() {
     moveBogiesLasers(bogieLaserArray);
 }
  
-var mainLoop = function() {    
-
+var mainLoop = function() {
     let now = Date.now();
-    let delta = now - then;
-    
-    ship.controlShip(delta / 1000);
-    
+    let delta = now - then;   
+    ship.controlShip(delta / 1000);        
     draw();
     move();
+     
     then = now;
     requestAnimationFrame(mainLoop);
 }
