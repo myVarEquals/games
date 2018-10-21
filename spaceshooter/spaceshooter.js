@@ -27,6 +27,8 @@ var explosionSheet = new Image();
 explosionSheet.src = 'imgAssets/explosion.png';
 var expSheetW = 786;
 var expSheetH = 128;
+var expSpriteW = expSheetW / 7;
+var exploding = false;
 var gameOver = false;
 
 // score
@@ -185,7 +187,8 @@ function moveBogiesLasers(bogies) {
 
             }
             if (ship.hitpoints == 0) {
-                gameOver = true;               
+                gameOver = true;
+                exploding = true;              
             }
             console.log(ship.hitpoints);
             continue;
@@ -238,14 +241,25 @@ function moveLasers() {
     }
 }
 
-function drawExplosion() {
+function drawExplosion() { 
+    console.log('drawExplosion()');
     let now = Date.now();
     let delta = now - then;
-
-    for(i = 0; i < expSheetW; i++) {
-        ctx.drawImage(explosionSheet, i * (expSheetW / 7), expSheetH, expSheetW/7, expSheetH, ship.x, ship.y, expSheetW/7, expSheetH);
+    var counter = 0;
+    var drawExplosionFrames;
+    drawExplosionFrames =  setInterval(drawFrame(), (delta / 1000));    
+    function drawFrame() {   
+        console.log('drawFrame()');               
+        ctx.drawImage(explosionSheet, counter * (expSheetW / 7), expSheetH, expSheetW/7, expSheetH, ship.x, ship.y, expSheetW/7, expSheetH);
+        counter++
+        console.log(counter);
+        if(counter > 7) {
+            console.log('toohigh');           
+            clearInterval(drawExplosionFrames);
+        }
+        
     }
-
+           
 }
 
 Ship.prototype.controlShip = function(tick) {
@@ -296,8 +310,12 @@ function testCollision(laser) {
 
 function draw() {
     drawSpace();
-    if(gameOver) {
+    if (exploding) {
         drawExplosion();
+        exploding = false;
+    }
+    if(gameOver) {
+        
     } else {    
     ship.drawShip();
     drawLasers();
