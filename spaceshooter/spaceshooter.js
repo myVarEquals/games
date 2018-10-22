@@ -252,17 +252,19 @@ function moveLasers() {
 // explosion animation
 
 let explosionFrame = 0;
+let again = 0;
+let elapsed = Date.now();
 function drawExplosion() { 
     
     let now = Date.now();
-    let delta = now - then;
-    console.log(delta);
-    if (delta && exploding) {
-        console.log('drawing' + explosionFrame);
+    if (exploding) {
         ctx.drawImage(explosionSheet, explosionFrame * expSpriteW, 0, expSpriteW, expSheetH,
                         ship.x, ship.y, expSpriteW, expSheetH);
+    }
 
-        explosionFrame++;
+    if (now - 150 > elapsed && exploding) {        
+        explosionFrame++;        
+        elapsed = now;
 
         if (explosionFrame == 5) {
             exploding = false;
