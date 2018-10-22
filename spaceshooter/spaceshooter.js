@@ -27,7 +27,7 @@ var explosionSheet = new Image();
 explosionSheet.src = 'imgAssets/explosion.png';
 var expSheetW = 786;
 var expSheetH = 128;
-var expSpriteW = expSheetW / 7;
+var expSpriteW = expSheetW / 6;
 
 // tests for game over
 var exploding = false;
@@ -250,23 +250,25 @@ function moveLasers() {
 }
 
 // explosion animation
+
+let explosionFrame = 0;
 function drawExplosion() { 
-    console.log('drawExplosion()');
+    
     let now = Date.now();
     let delta = now - then;
-    var counter = 0;
-    var drawExplosionFrames;
-    drawExplosionFrames =  setInterval(drawFrame(), (delta / 1000));    
-    function drawFrame() {   
-        console.log('drawFrame()');               
-        ctx.drawImage(explosionSheet, counter * (expSheetW / 7), expSheetH, expSheetW/7, expSheetH, ship.x, ship.y, expSheetW/7, expSheetH);
-        counter++
-        console.log(counter);
-        if(counter > 7) {
-            console.log('toohigh');           
-            clearInterval(drawExplosionFrames);
+    console.log(delta);
+    if (delta && exploding) {
+        console.log('drawing' + explosionFrame);
+        ctx.drawImage(explosionSheet, explosionFrame * expSpriteW, 0, expSpriteW, expSheetH,
+                        ship.x, ship.y, expSpriteW, expSheetH);
+
+        explosionFrame++;
+
+        if (explosionFrame == 5) {
+            exploding = false;
+            console.log(exploding);
+            explosionFrame = 0;
         }
-        
     }
            
 }
@@ -275,8 +277,8 @@ function drawExplosion() {
 Ship.prototype.controlShip = function(tick) {
 
     if(32 in keysPressed) { // space, fire        
-            this.count++;
-        if(this.count == this.rate) {
+            this.count++; // shots fired inc
+        if(this.count == this.rate) { // limit rate
             laserArray.push(new Laser(ship.x,ship.y));
             this.count = 0;
         }      
@@ -323,7 +325,6 @@ function draw() {
     drawSpace();
     if (exploding) {
         drawExplosion();
-        exploding = false;
     }
     if(gameOver) {
         
