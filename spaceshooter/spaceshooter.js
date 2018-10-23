@@ -259,7 +259,7 @@ function drawExplosion() {
     let now = Date.now();
     if (exploding) {
         ctx.drawImage(explosionSheet, explosionFrame * expSpriteW, 0, expSpriteW, expSheetH,
-                        ship.x, ship.y, expSpriteW, expSheetH);
+                        ship.x - (expSpriteW / 2) + (heroW / 2), ship.y - (expSheetH / 2) + (heroH / 2), expSpriteW, expSheetH);
     }
 
     if (now - 150 > elapsed && exploding) {        
@@ -340,10 +340,14 @@ function draw() {
 }
 
 function move() {      
-    moveStars();    
+    moveStars();
+    if(gameOver) {
+
+    } else { 
     moveLasers();
     moveBogies(bogiesArray);
     moveBogiesLasers(bogieLaserArray);
+    }
 }
  
 var mainLoop = function() {
