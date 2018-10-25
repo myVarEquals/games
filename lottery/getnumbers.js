@@ -197,4 +197,5 @@ for (i = 0; i < splitter.length; i += 64) {
 
 // copy(JSON.stringify(temp1))
 
-// console.log(drawnSets);
+// 0
+console.log(drawnSets);
