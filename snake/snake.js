@@ -6,6 +6,7 @@ const SNAKE_SIZE = 25; // 25px by 25px squares
 // initialize snake direction
 var direction = 'right';
 var gameOver = false;
+var score = 0;
 
 window.onload = function() { // when window loads...
     drawBackground();
@@ -67,25 +68,44 @@ function drawFood(x,y) { // draw apple
     ctx.strokeRect(x*SNAKE_SIZE, y*SNAKE_SIZE, SNAKE_SIZE, SNAKE_SIZE);
 }
 
+function drawScore() {
+    ctx.font = '20px Comic Sans';
+    ctx.fillStyle = 'white';
+    ctx.fillText(`Score: ${score}`, (canvas.width / 2) - 30, canvas.height - 30);
+}
+
+function collisionTest(x, y, array) {
+    for (i = 1; i < array.length; i++) {
+        if (x == array[i].x && y == array[i].y) { // if snake head is on any snake sq
+            return true;
+        }
+    }
+    return false;
+}
+
 function draw() { // main draw
     ctx.clearRect(0,0,cvs.width,cvs.height); // clear canv
     drawBackground(); // black
+    drawScore();
     for (i = 0; i < snake.length; i++) { // for length of snake array
         var x = snake[i].x; // get args
         var y = snake[i].y; // ^ ^ ^ 
         drawSnake(x,y); // draw piece
     }
 
+
     
     drawFood(food.x, food.y); // food
     // snake head pos
     var snakeX = snake[0].x;
     var snakeY = snake[0].y;
+    
 
     if (snakeX >= cvs.width / SNAKE_SIZE || // snake hits right
         snakeX < 0 ||                       // snake hits left
         snakeY >= cvs.height / SNAKE_SIZE ||// snake hits bottom
-        snakeY < 0) {                       // snake hits top
+        snakeY < 0 ||                       // snake hits top
+        collisionTest(snakeX, snakeY, snake)) { // snake hits tail                      
             location.reload(); // reload page to reset game
     }
 
@@ -95,7 +115,7 @@ function draw() { // main draw
             y: Math.floor(Math.random() * (cvs.height/SNAKE_SIZE))
         }
         // console.log(food);
-        // console.log(len);
+        score++;
     } else {        
         snake.pop(); // remove tail
     }
@@ -122,4 +142,4 @@ function draw() { // main draw
     snake.unshift(newHead); // add new head to front of array
 }
 
-setInterval(draw, 100);
+setInterval(draw, 80); // add to slow down, ms
