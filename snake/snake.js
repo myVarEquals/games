@@ -122,4 +122,4 @@ function draw() { // main draw
     snake.unshift(newHead); // add new head to front of array
 }
 
-setInterval(draw, 1000);
+setInterval(draw, 100);
